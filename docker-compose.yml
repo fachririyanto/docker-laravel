@@ -1,0 +1,39 @@
+services:
+
+  # Laravel App
+  laravel-docker:
+    container_name: laravel-docker-app
+    image: laravel-docker
+    restart: no
+    volumes:
+      - ./laravel-app:/var/www/html
+    ports:
+      - 9000:80
+
+  # PHPMyAdmin
+  laravel-phpmyadmin:
+    container_name: laravel-docker-phpmyadmin
+    depends_on:
+      - laravel-db
+    image: phpmyadmin/phpmyadmin
+    restart: no
+    ports:
+      - 9090:80
+    environment:
+      PMA_HOST: laravel-db
+
+  # MySQL
+  laravel-db:
+    container_name: laravel-docker-mysql
+    image: mysql:5.7
+    restart: no
+    volumes:
+      - laravel_db_mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: laravel_app
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+
+# Volumes
+volumes:
+  laravel_db_mysql:
